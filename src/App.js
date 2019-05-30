@@ -122,8 +122,9 @@ class App extends Component {
 
   // Update teams with rank info from db
   rankInfo() { 
-    for (let i = 0; i < 16; i++) {
-    this.teamData.datasets[i].data.push(this.state.newData[i].rank);
+    for (let i = 0, j = 0; i < 16; i++, j+=2) {
+      this.teamData.datasets[i].data.push(this.state.newData[j].rank);
+      this.teamData.datasets[i].data.push(this.state.newData[j + 1].rank);
     }
     // console.log(this.teamData);
     this.setState({

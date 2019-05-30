@@ -4,7 +4,7 @@ const mysql = require('mysql');
 
 const app = express();
 
-const SELECT_ALL_STATS_QUERY = 'SELECT * FROM stats ORDER BY team';
+const SELECT_ALL_STATS_QUERY = 'SELECT * FROM stats ORDER BY team, week';
 
 const connection = mysql.createConnection({
   host: 'localhost',
