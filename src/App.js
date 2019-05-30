@@ -111,8 +111,12 @@ class App extends Component {
     fetch('http://localhost:3001/stats')
       .then(response => response.json())
       .then(({ data }) => {
+        // Calculate number of weeks of data retrieved - number of records divided by number of teams (16)
+        const weeks = data.length / 16;
+        
         this.setState({
-          newData: data
+          newData: data,
+          weeks
         })
       })
       // Will show rank chart on page load
@@ -122,15 +126,19 @@ class App extends Component {
 
   // Update teams with rank info from db
   rankInfo() { 
-    for (let i = 0, j = 0; i < 16; i++, j+=2) {
-      this.teamData.datasets[i].data.push(this.state.newData[j].rank);
-      this.teamData.datasets[i].data.push(this.state.newData[j + 1].rank);
+    let team = 0, counter = 0
+    for (let i = 0; i < 48; i++) {  
+      if (counter >= this.state.weeks) {
+        team++;
+        counter = 0;
+      } 
+      this.teamData.datasets[team].data.push(this.state.newData[i].rank);
+      counter ++;
     }
-    // console.log(this.teamData);
+    
     this.setState({
       chartData: this.teamData
     })
-    console.log(this.state);
   }
 
   render() {
