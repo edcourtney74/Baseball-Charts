@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const mysql = require('mysql');
+const PORT = process.env.PORT || 3001;
 
 const app = express();
 
@@ -35,6 +36,6 @@ app.get('/stats', (req, res) => {
   });
 });
 
-app.listen(3001, () => {
-  console.log("Listening on 3001")
+app.listen(PORT, () => {
+  console.log(`Listening on ${PORT}`)
 });
