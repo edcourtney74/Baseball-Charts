@@ -11,15 +11,14 @@ class App extends Component {
       chartData: this.teamData,
     }
   }
-
   // Do initial database call
-  async componentDidMount() {
+  componentDidMount() {
     this.getChartData();
   }
 
-  // Initial teams object
+  // Initial teams object, structured for ChartJS
   teamData = {
-    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6', 'Week 7'],
+    labels: [],
     datasets: [
       {
         label: 'APG',
@@ -105,7 +104,6 @@ class App extends Component {
     ],
   }
 
-
   // Initial db call on page load
   getChartData() {
     fetch('http://localhost:3001/stats')
@@ -113,29 +111,42 @@ class App extends Component {
       .then(({ data }) => {
         // Calculate number of weeks of data retrieved - number of records divided by number of teams (16)
         const weeks = data.length / 16;
+
+        // Add week numbers to chart label once data retrieved
+        for (let i = 1; i <= weeks; i++) {
+          this.teamData.labels.push(`Week ${i}`)
+        }
         
+        // Save db data, weeks in state for further use
         this.setState({
           newData: data,
           weeks
         })
       })
-      // Will show rank chart on page load
+      // Call function to show rank chart on page load
       .then(() => this.rankInfo())
       .catch(err => console.log(err));
   }
 
   // Update teams with rank info from db
   rankInfo() { 
+    console.log(this.state.newData.length);
+    
+    // Set team and counter to 0
     let team = 0, counter = 0
-    for (let i = 0; i < 48; i++) {  
+    
+    // For loop goes through each database record
+    for (let i = 0; i < this.state.newData.length; i++) {  
+      // Records are groups alphabetically by team, so the first team's records will all be in a row. So we need to keep a counter to check when it's time to move to the next team. Once the counter is greater than the number of weeks in the data, we know it's time to move on. Add one to the team counter and reset the other counter.
       if (counter >= this.state.weeks) {
         team++;
         counter = 0;
-      } 
+      }
+      // Push the rank from the record into the team's data. Advance the counter. 
       this.teamData.datasets[team].data.push(this.state.newData[i].rank);
       counter ++;
     }
-    
+    // Set state with the new team data
     this.setState({
       chartData: this.teamData
     })
