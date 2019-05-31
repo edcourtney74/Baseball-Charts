@@ -7,13 +7,19 @@ const app = express();
 
 const SELECT_ALL_STATS_QUERY = 'SELECT * FROM stats ORDER BY team, week';
 
-const connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: 'root',
-  database: 'fantasy_stats',
-  port: '8889'
-});
+let connection = '';
+
+if (process.env.JAWSDB_URL) {
+  connection = mysql.createConnection(process.env.JAWSDB_URL)
+} else {
+  connection = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: 'root',
+    database: 'fantasy_stats',
+    port: '8889'
+  });
+}
 
 connection.connect();
 
