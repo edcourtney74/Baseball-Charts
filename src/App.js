@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Container, Row } from 'reactstrap';
 import Chart from './components/Chart';
+import axios from 'axios';
 import './App.css';
 
 class App extends Component {
@@ -121,11 +122,10 @@ class App extends Component {
 
   // Initial db call on page load
   getChartData() {
-    fetch('http://localhost:3001/stats')
-      .then(response => response.json())
-      .then(({ data }) => {
+    axios.get('/api/stats')
+      .then(response => {
         // Calculate number of weeks of data retrieved - number of records divided by number of teams (16)
-        const weeks = data.length / 16;
+        const weeks = response.data.results.length / 16;
 
         // Add week numbers to chart label once data retrieved
         for (let i = 1; i <= weeks; i++) {
@@ -134,7 +134,7 @@ class App extends Component {
         
         // Save db data, weeks in state for further use
         this.setState({
-          newData: data,
+          newData: response.data.results,
           weeks
         })
       })

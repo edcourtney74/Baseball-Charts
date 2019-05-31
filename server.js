@@ -19,18 +19,14 @@ connection.connect();
 
 app.use(cors());
 
-app.get('/', (req, res) => {
-  res.send('hello');
-});
-
-app.get('/stats', (req, res) => {
+app.get('/api/stats', (req, res) => {
   connection.query(SELECT_ALL_STATS_QUERY, (err, results) => {
     if (err) {
       return res.send(err)
     }
     else {
       return res.json({
-        data: results
+        results
       })
     }
   });
