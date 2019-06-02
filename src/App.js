@@ -122,7 +122,7 @@ class App extends Component {
 
   // Initial db call on page load
   getChartData() {
-    axios.get('/api/stats')
+    axios({url: '/api/stats', baseURL: process.env.baseURL || 'http://localhost:3001'})
       .then(response => {
         // Calculate number of weeks of data retrieved - number of records divided by number of teams (16)
         const weeks = response.data.results.length / 16;
